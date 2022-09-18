@@ -65,6 +65,18 @@ function entryAutomate(currentPage: HTMLDivElement) {
 
       break;
     case 'homepage-main':
+      const redDots = currentPage.getElementsByClassName('readpoint');
+      if (redDots.length) {
+        // Red dots exist
+        const firstRedDotEle = redDots[0].parentElement as HTMLDivElement;
+        firstRedDotEle.click();
+      } else {
+        // No red dots
+        const passCodeEle = currentPage.children[0].children[1]
+          .children[2] as HTMLDivElement;
+
+        passCodeEle.click();
+      }
       break;
   }
 }

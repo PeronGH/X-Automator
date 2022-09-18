@@ -55,6 +55,17 @@ function entryAutomate(currentPage) {
             }
             break;
         case 'homepage-main':
+            const redDots = currentPage.getElementsByClassName('readpoint');
+            if (redDots.length) {
+                // Red dots exist
+                const firstRedDotEle = redDots[0]
+            }
+            else {
+                // No red dots
+                const passCodeEle = currentPage.children[0].children[1]
+                    .children[2];
+                passCodeEle.click();
+            }
             break;
     }
 }
