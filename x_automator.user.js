@@ -5,6 +5,8 @@
 // @author       Peron
 // @match        https://sso.xjtlu.edu.cn/login
 // @match        https://core.xjtlu.edu.cn/local/login/index.php*
+// @updateURL    https://github.com/PeronGH/X-Automator/raw/main/x_automator.user.js
+// @downloadURL  https://github.com/PeronGH/X-Automator/raw/main/x_automator.user.js
 // @grant        none
 // ==/UserScript==
 'use strict';
