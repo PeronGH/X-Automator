@@ -5,6 +5,7 @@
 // @author       Peron
 // @match        https://sso.xjtlu.edu.cn/login
 // @match        https://core.xjtlu.edu.cn/local/login/index.php*
+// @match        https://entry.xjtlu.edu.cn/user/*
 // @updateURL    https://github.com/PeronGH/X-Automator/raw/main/x_automator.user.js
 // @downloadURL  https://github.com/PeronGH/X-Automator/raw/main/x_automator.user.js
 // @grant        none
@@ -22,10 +23,50 @@ switch (location.hostname) {
     // LMO Auto Redirect
     location.href = 'https://core.xjtlu.edu.cn/auth/saml2/login.php';
     break;
+  case 'entry.xjtlu.edu.cn':
+    const appDiv = document.getElementById('app') as HTMLDivElement;
+
+    // Wait for DOM loading
+    const waitAppDiv = () => {
+      const currentPage = appDiv.firstElementChild as HTMLDivElement;
+
+      if (currentPage) entryAutomate(currentPage);
+      else setTimeout(waitAppDiv);
+    };
+    waitAppDiv();
+
+    break;
   default:
     console.error(
       'Automator: Unknown site, you may report the issue to the developer'
     );
+}
+
+function entryAutomate(currentPage: HTMLDivElement) {
+  switch (currentPage.className) {
+    case 'select-role':
+      const roleEleCol = document.getElementsByClassName('selectbox');
+
+      // Found saved role id
+      const queriedRoleId = localStorage.getItem('x-role');
+      if (queriedRoleId) {
+        const roleEle = roleEleCol[+queriedRoleId] as HTMLDivElement;
+        roleEle.click();
+      }
+      // Set event listener
+      for (let i = 0; i < roleEleCol.length; ++i) {
+        const roleEle = roleEleCol[i] as HTMLDivElement;
+
+        // Save selection
+        roleEle.addEventListener('click', () => {
+          localStorage.setItem('x-role', i.toString());
+        });
+      }
+
+      break;
+    case 'homepage-main':
+      break;
+  }
 }
 
 function ssoAutoLogin() {
