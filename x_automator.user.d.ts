@@ -1,0 +1,1 @@
+declare function doLogin(): void;
