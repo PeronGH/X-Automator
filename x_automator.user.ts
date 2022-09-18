@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         X Automator For XJTLU
-// @version      1.0.0
+// @version      1.1.0
 // @description  Automatically log in and fill in for some XJTLU websites
 // @author       Peron
 // @match        https://sso.xjtlu.edu.cn/login
