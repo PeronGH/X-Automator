@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         X Automator For XJTLU
-// @version      1.1.0
+// @version      1.1.1
 // @description  Automatically log in and fill in for some XJTLU websites
 // @author       Peron
 // @match        https://sso.xjtlu.edu.cn/login
@@ -55,18 +55,9 @@ function entryAutomate(currentPage) {
             }
             break;
         case 'homepage-main':
-            const redDots = currentPage.getElementsByClassName('readpoint');
-            if (redDots.length) {
-                // Red dots exist
-                const firstRedDotEle = redDots[0].parentElement;
-                firstRedDotEle.click();
-            }
-            else {
-                // No red dots
-                const passCodeEle = currentPage.children[0].children[1]
-                    .children[2];
-                passCodeEle.click();
-            }
+            // Too buggy, removed, may be added later
+            // const redDots = currentPage.getElementsByClassName('readpoint');
+            location.href = 'https://entry.xjtlu.edu.cn/user/#/PassCode';
             break;
     }
 }
