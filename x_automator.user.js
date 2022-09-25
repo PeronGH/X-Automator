@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         X Automator For XJTLU
-// @version      1.1.1
+// @version      1.1.2
 // @description  Automatically log in and fill in for some XJTLU websites
 // @author       Peron
 // @match        https://sso.xjtlu.edu.cn/login
@@ -12,53 +12,55 @@
 // ==/UserScript==
 'use strict';
 console.log('Automator Running...');
-switch (location.hostname) {
-    case 'sso.xjtlu.edu.cn':
-        ssoAutoLogin();
-        break;
-    case 'core.xjtlu.edu.cn':
-        // LMO Auto Redirect
-        location.href = 'https://core.xjtlu.edu.cn/auth/saml2/login.php';
-        break;
-    case 'entry.xjtlu.edu.cn':
-        const appDiv = document.getElementById('app');
-        // Wait for DOM loading
-        const waitAppDiv = () => {
-            const currentPage = appDiv.firstElementChild;
-            if (currentPage)
-                entryAutomate(currentPage);
-            else
-                setTimeout(waitAppDiv);
-        };
-        waitAppDiv();
-        break;
-    default:
-        console.error('Automator: Unknown site, you may report the issue to the developer');
+const hostname = location.hostname;
+if (hostname === 'sso.xjtlu.edu.cn') {
+    // SSO Auto Login
+    ssoAutoLogin();
+}
+else if (hostname === 'core.xjtlu.edu.cn') {
+    // LMO Auto Redirect
+    location.href = 'https://core.xjtlu.edu.cn/auth/saml2/login.php';
+}
+else if (hostname === 'entry.xjtlu.edu.cn') {
+    // Entry Auto Open Passcode
+    const appDiv = document.getElementById('app');
+    // Wait for DOM loading
+    const waitAppDiv = () => {
+        const currentPage = appDiv.firstElementChild;
+        if (currentPage)
+            entryAutomate(currentPage);
+        else
+            setTimeout(waitAppDiv);
+    };
+    waitAppDiv();
+}
+else {
+    // Unknown Site
+    console.error('Automator: Unknown site, you may report the issue to the developer');
 }
 function entryAutomate(currentPage) {
-    switch (currentPage.className) {
-        case 'select-role':
-            const roleEleCol = document.getElementsByClassName('selectbox');
-            // Found saved role id
-            const queriedRoleId = localStorage.getItem('x-role');
-            if (queriedRoleId) {
-                const roleEle = roleEleCol[+queriedRoleId];
-                roleEle.click();
-            }
-            // Set event listener
-            for (let i = 0; i < roleEleCol.length; ++i) {
-                const roleEle = roleEleCol[i];
-                // Save selection
-                roleEle.addEventListener('click', () => {
-                    localStorage.setItem('x-role', i.toString());
-                });
-            }
-            break;
-        case 'homepage-main':
-            // Too buggy, removed, may be added later
-            // const redDots = currentPage.getElementsByClassName('readpoint');
-            location.href = 'https://entry.xjtlu.edu.cn/user/#/PassCode';
-            break;
+    const pageName = currentPage.className;
+    if (pageName === 'select-role') {
+        const roleEleCol = document.getElementsByClassName('selectbox');
+        // Found saved role id
+        const queriedRoleId = localStorage.getItem('x-role');
+        if (queriedRoleId) {
+            const roleEle = roleEleCol[+queriedRoleId];
+            roleEle.click();
+        }
+        // Set event listener
+        for (let i = 0; i < roleEleCol.length; ++i) {
+            const roleEle = roleEleCol[i];
+            // Save selection
+            roleEle.addEventListener('click', () => {
+                localStorage.setItem('x-role', i.toString());
+            });
+        }
+    }
+    else if (pageName === 'homepage-main') {
+        // Too buggy, removed, may be added later
+        // const redDots = currentPage.getElementsByClassName('readpoint');
+        location.href = 'https://entry.xjtlu.edu.cn/user/#/PassCode';
     }
 }
 function ssoAutoLogin() {
@@ -74,7 +76,7 @@ function ssoAutoLogin() {
     autoLogin(nameEle, pwdEle, loginBtn);
 }
 function autoLogin(nameEle, pwdEle, loginBtn) {
-    // Basic Operations
+    // Common Operations
     const setInputValue = (ele, value) => {
         ele.value = value;
         ele.textContent = value;
