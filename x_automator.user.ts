@@ -34,6 +34,7 @@ if (hostname === 'sso.xjtlu.edu.cn') {
     if (currentPage) entryAutomate(currentPage);
     else setTimeout(waitAppDiv);
   };
+
   waitAppDiv();
 } else {
   // Unknown Site
